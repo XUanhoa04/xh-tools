@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XH Tools & App - Bộ Công Cụ Tự Động Hóa & AI Đột Phá Cho Autodesk Revit</title>
+  <meta name="description" content="XH Tools & App: Giải pháp tự động hóa thiết kế BIM, dựng cột, dầm, tường, thang, lan can, chuyển đổi SKP/3D siêu nhẹ, binh bãi xe thông minh và tự động Dim/Tag bản vẽ chuẩn TCVN trên Autodesk Revit.">
+  <meta name="keywords" content="XH Tools, Revit Add-in, BIM Automation, Tự động hóa Revit, AI Revit, Cái Xuân Hiếu, XH Family Management">
+  <meta name="author" content="Cái Xuân Hiếu">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo-circle.png">
+
+  <!-- Google Font: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#08090E',
+              card: '#0E111A',
+              cardHover: '#131824',
+              border: '#1E2330',
+              borderHover: '#374151',
+              primary: '#6366F1',
+              accent: '#06B6D4',
+              cyan: '#22D3EE',
+              glow: '#4F46E5',
+            }
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 8s ease-in-out infinite',
+            'float-slow': 'floatSlow 6s ease-in-out infinite',
+            'radar-spin': 'radarSpin 12s linear infinite',
+            'shimmer': 'shimmer 2.5s infinite linear',
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.45', transform: 'scale(1)' },
+              '50%': { opacity: '0.75', transform: 'scale(1.08)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            radarSpin: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' },
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(200%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Utilities & Linear/Vercel effects */
+    body {
+      background-color: #08090E;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Subtle grid background pattern */
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Glow mesh gradients */
+    .hero-glow-indigo {
+      background: radial-gradient(circle 500px at 50% 30%, rgba(99, 102, 241, 0.18), transparent 70%);
+    }
+    .hero-glow-cyan {
+      background: radial-gradient(circle 420px at 70% 20%, rgba(6, 182, 212, 0.15), transparent 65%);
+    }
+    .ambient-glow-card {
+      background: radial-gradient(circle 250px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.12), transparent 80%);
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.45);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px -12px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Gradient Typography */
+    .text-gradient {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-gradient-cyan {
+      background: linear-gradient(135deg, #38BDF8 0%, #06B6D4 50%, #6366F1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Code & Terminal Styling */
+    pre, code {
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08090E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E2330;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+  </style>
+</head>
+<body class="bg-[#08090E] text-slate-100 antialiased selection:bg-indigo-500/30 selection:text-indigo-200 min-h-screen relative">
+
+  <!-- BACKGROUND LIGHTING & GRID (Linear / Vercel Ambient Glow) -->
+  <div class="fixed inset-0 bg-grid-pattern pointer-events-none z-0 opacity-60"></div>
+  <div class="fixed -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] hero-glow-indigo pointer-events-none z-0 animate-glow-pulse"></div>
+  <div class="fixed top-20 right-10 w-[700px] h-[500px] hero-glow-cyan pointer-events-none z-0"></div>
+
+  <!-- ======================================================== -->
+  <!-- 1. NAVBAR                                               -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#08090E]/80 border-b border-white/5 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3.5 group">
+          <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-white/10 p-1.5 shadow-inner group-hover:border-cyan-400/50 transition-all duration-300">
+            <!-- Modern Motion Bars Logo matching XH Tools brand -->
+            <svg class="w-full h-full text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="22" width="28" height="9" rx="4.5" fill="#38BDF8"/>
+              <rect x="24" y="38" width="42" height="9" rx="4.5" fill="#22D3EE"/>
+              <rect x="15" y="54" width="56" height="9" rx="4.5" fill="#06B6D4"/>
+              <rect x="30" y="70" width="38" height="9" rx="4.5" fill="#6366F1"/>
+              <circle cx="82" cy="58" r="4.5" fill="#38BDF8"/>
+              <circle cx="78" cy="42" r="4.5" fill="#22D3EE"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-cyan-400 transition-colors">XH TOOLS</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v2.9 AI</span>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">AND APP FOR REVIT</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Tính năng cốt lõi</a>
+          <a href="#ai-engine" class="text-sm font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-1.5">
+            <span>Hệ sinh thái AI</span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          </a>
+          <a href="#workflow" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Quy trình 1-Click</a>
+          <a href="#pricing" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Bảng giá</a>
+          <a href="#deploy-guide" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Tài liệu & Tải về</a>
+        </nav>
+
+        <!-- Navbar Actions -->
+        <div class="hidden sm:flex items-center gap-4">
+          <a href="#pricing" class="text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 rounded-lg transition-colors">
+            Đăng nhập / Kích hoạt
+          </a>
+          <a href="#download" class="relative group overflow-hidden rounded-xl p-[1px] focus:outline-none">
+            <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-cyan-400 to-indigo-500 rounded-xl transition-all duration-300 group-hover:opacity-100 opacity-80 group-hover:blur-[2px]"></span>
+            <span class="relative flex items-center gap-2 px-5 py-2.5 rounded-[11px] bg-[#0E111A] text-sm font-semibold text-white transition-all duration-300 group-hover:bg-opacity-80 shadow-lg shadow-indigo-500/25">
+              <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
+              <span>Tải XH Tools Miễn Phí</span>
+            </span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="flex md:hidden">
+          <button id="mobile-menu-btn" type="button" class="p-2 text-slate-400 hover:text-white focus:outline-none">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-white/10 bg-[#08090E]/95 backdrop-blur-2xl px-6 py-6 space-y-4">
+      <a href="#features" class="block text-base font-medium text-slate-200 hover:text-cyan-400">Tính năng cốt lõi</a>
+      <a href="#ai-engine" class="block text-base font-medium text-slate-200 hover:text-cyan-400">Hệ sinh thái AI</a>
+      <a href="#workflow" class="block text-base font-medium text-slate-200 hover:text-cyan-400">Quy trình 1-Click</a>
+      <a href="#pricing" class="block text-base font-medium text-slate-200 hover:text-cyan-400">Bảng giá</a>
+      <a href="#deploy-guide" class="block text-base font-medium text-slate-200 hover:text-cyan-400">Hướng dẫn & Tải về</a>
+      <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+        <a href="#download" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30">
+          Tải XH Tools v2.9 Ngay
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- ======================================================== -->
+    <!-- 2. HERO SECTION                                          -->
+    <!-- ======================================================== -->
+    <section class="relative pt-16 pb-20 md:pt-28 md:pb-32 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mb-8 hover:border-indigo-500/40 transition-all duration-300">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+          </span>
+          <span class="text-xs font-semibold text-slate-300">Bản phát hành chính thức XH Tools v2.9 & AI Smart Engine</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.12]">
+          <span class="text-gradient">Tự Động Hóa 90% Quy Trình Revit</span>
+          <br>
+          <span class="text-gradient-cyan">Với Sức Mạnh Của AI Kiến Trúc</span>
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="mt-7 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed">
+          Bộ Add-in toàn diện được xây dựng bởi <strong class="text-slate-200 font-semibold">Kỹ sư Cái Xuân Hiếu</strong>. Dựng Cột, Dầm, Tường 3D từ CAD chỉ với 1 click, chuyển đổi SketchUp sang Family siêu nhẹ, binh bãi xe AI, tự động Dim/Tag và căn thẳng hàng trăm Sheet chuẩn TCVN.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+          <a href="#download" class="w-full sm:w-auto flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-semibold text-base shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+            <i data-lucide="download-cloud" class="w-5 h-5"></i>
+            <span>Tải Bộ Cài Đặt (Miễn Phí)</span>
+          </a>
+          <a href="#demo-modal" onclick="openDemoVideo()" class="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-200 font-semibold text-base backdrop-blur-lg hover:border-white/20 transition-all duration-200">
+            <i data-lucide="play-circle" class="w-5 h-5 text-cyan-400"></i>
+            <span>Xem Video Thao Tác</span>
+          </a>
+        </div>
+
+        <!-- Social Proof Badges -->
+        <div class="mt-12 flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs font-medium text-slate-400">
+          <div class="flex items-center gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+            <span>Hỗ trợ Autodesk Revit 2020 - 2027</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <span>Tăng 85% tốc độ triển khai hồ sơ</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+            <span>Bản quyền sạch, không crash dự án</span>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MOCKUP GIAO DIỆN PHẦN MỀM (Interactive Revit Workspace)   -->
+        <!-- ======================================================== -->
+        <div class="mt-14 relative max-w-6xl mx-auto">
+          <!-- Ambient backlight glow -->
+          <div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-500/30 via-cyan-500/20 to-indigo-500/30 rounded-2xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000"></div>
+
+          <!-- Main Window Frame -->
+          <div class="relative rounded-2xl bg-[#0B0E17] border border-white/15 shadow-2xl overflow-hidden text-left">
+            
+            <!-- Window Topbar -->
+            <div class="flex items-center justify-between px-4 py-3 bg-[#08090E] border-b border-white/10 text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                <span class="ml-2 font-mono text-slate-500 hidden sm:inline">Autodesk Revit 2026 - [Du_An_Trung_Tam_Thuong_Mai.rvt - 3D View]</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[11px] flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  XH AI Engine: Active
+                </span>
+                <span class="font-mono text-slate-500 text-[11px]">Build v2.9.4</span>
+              </div>
+            </div>
+
+            <!-- Revit Ribbon Bar Mockup (XH TOOLS Tab) -->
+            <div class="bg-[#0F1320] border-b border-white/10 px-4 py-2 flex items-center gap-2 overflow-x-auto text-xs">
+              <div class="flex items-center gap-1 border-r border-white/10 pr-3">
+                <span class="px-3 py-1 rounded bg-indigo-600/30 text-indigo-200 font-bold border border-indigo-500/40 flex items-center gap-1.5">
+                  <i data-lucide="layers" class="w-3.5 h-3.5 text-cyan-400"></i>
+                  XH TOOLS
+                </span>
+                <span class="px-2.5 py-1 text-slate-400 hover:text-white">Architecture</span>
+                <span class="px-2.5 py-1 text-slate-400 hover:text-white">Structure</span>
+                <span class="px-2.5 py-1 text-slate-400 hover:text-white">Collaborate</span>
+                <span class="px-2.5 py-1 text-slate-400 hover:text-white">Modify</span>
+              </div>
+
+              <!-- Ribbon Quick Actions -->
+              <div class="flex items-center gap-2 pl-2">
+                <button onclick="simulateAction('wall')" class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-400 text-slate-300 hover:text-white transition-all">
+                  <i data-lucide="box" class="w-3.5 h-3.5 text-cyan-400"></i>
+                  <span>Dựng Tường CAD</span>
+                </button>
+                <button onclick="simulateAction('column')" class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-400 text-slate-300 hover:text-white transition-all">
+                  <i data-lucide="grid" class="w-3.5 h-3.5 text-indigo-400"></i>
+                  <span>Dựng Cột Giao Trục</span>
+                </button>
+                <button onclick="simulateAction('skp')" class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-400 text-slate-300 hover:text-white transition-all">
+                  <i data-lucide="file-up" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>Convert .SKP Family</span>
+                </button>
+                <button onclick="simulateAction('dim')" class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-400 text-slate-300 hover:text-white transition-all">
+                  <i data-lucide="ruler" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>Dim Tự Động 3 Cấp</span>
+                </button>
+                <button onclick="simulateAction('parking')" class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-400 text-slate-300 hover:text-white transition-all">
+                  <i data-lucide="car" class="w-3.5 h-3.5 text-pink-400"></i>
+                  <span>Binh Bãi Xe AI</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Workspace Body -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[420px] bg-[#07090F]">
+              
+              <!-- Left: Project Browser & Parameters Sidebar -->
+              <div class="hidden lg:block lg:col-span-3 border-r border-white/10 p-4 bg-[#090C15] text-xs font-mono">
+                <div class="text-slate-400 uppercase tracking-wider text-[11px] font-bold mb-3 flex items-center justify-between">
+                  <span>XH Project Inspector</span>
+                  <i data-lucide="sliders" class="w-3.5 h-3.5 text-cyan-400"></i>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
+                    <span class="text-slate-500 block text-[10px]">TẦNG LÀM VIỆC (LEVEL)</span>
+                    <span class="text-slate-200 font-semibold">Tầng 1 (Elevation: +0.000m)</span>
+                  </div>
+                  <div class="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
+                    <span class="text-slate-500 block text-[10px]">ALGORITHM STATUS</span>
+                    <span class="text-emerald-400 flex items-center gap-1.5 font-semibold">
+                      <i data-lucide="check" class="w-3 h-3"></i> AI Deduplication: ON
+                    </span>
+                  </div>
+                  <div class="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
+                    <span class="text-slate-500 block text-[10px]">TIÊU CHUẨN THIẾT KẾ</span>
+                    <span class="text-cyan-300 font-semibold">TCVN 5574 & BXD 2026</span>
+                  </div>
+                  <div class="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
+                    <span class="text-slate-500 block text-[10px]">KHU VỰC THAO TÁC</span>
+                    <span class="text-indigo-300">Phân khu A (2,450 m²)</span>
+                  </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/5">
+                  <span class="text-slate-400 font-bold block mb-2 text-[10px] uppercase">Thống Kê Tức Thời</span>
+                  <div class="space-y-1.5 text-slate-300 text-[11px]">
+                    <div class="flex justify-between">
+                      <span class="text-slate-500">Cột đã sinh:</span>
+                      <span class="font-bold text-white">48 Vị trí</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-500">Tường CAD:</span>
+                      <span class="font-bold text-white">1,240 m dài</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-500">Dim nối tiếp:</span>
+                      <span class="font-bold text-white">186 Chuỗi</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-500">Thời gian chạy:</span>
+                      <span class="font-bold text-emerald-400">1.4 giây</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Center: 3D Revit Simulation Canvas -->
+              <div class="lg:col-span-6 p-6 relative flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#090D18] to-[#060810]">
+                <!-- Isometric Architectural Wireframe SVG -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
+                  <svg class="w-[90%] h-[90%] text-indigo-400" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Ground Grid -->
+                    <path d="M50 200 L200 270 L350 200 L200 130 Z" stroke="#374151" stroke-width="1.2" stroke-dasharray="3 3"/>
+                    <path d="M80 186 L200 242 L320 186 L200 130 Z" stroke="#1F2937" stroke-width="1"/>
+                    <!-- 3D Columns -->
+                    <line x1="120" y1="167" x2="120" y2="90" stroke="#06B6D4" stroke-width="3"/>
+                    <line x1="200" y1="205" x2="200" y2="128" stroke="#06B6D4" stroke-width="3"/>
+                    <line x1="280" y1="167" x2="280" y2="90" stroke="#06B6D4" stroke-width="3"/>
+                    <line x1="200" y1="130" x2="200" y2="52" stroke="#06B6D4" stroke-width="3"/>
+                    <!-- 3D Beams connecting columns -->
+                    <path d="M120 90 L200 128 L280 90 L200 52 Z" stroke="#6366F1" stroke-width="2.5" fill="rgba(99,102,241,0.08)"/>
+                    <path d="M120 167 L200 205 L280 167 L200 130 Z" stroke="#6366F1" stroke-width="1.8"/>
+                    <!-- Dimensions string indicators -->
+                    <line x1="120" y1="65" x2="200" y2="103" stroke="#F59E0B" stroke-width="1" stroke-dasharray="2 2"/>
+                    <text x="145" y="76" fill="#F59E0B" font-size="8" font-family="monospace">8,400</text>
+                    <line x1="200" y1="103" x2="280" y2="65" stroke="#F59E0B" stroke-width="1" stroke-dasharray="2 2"/>
+                    <text x="235" y="76" fill="#F59E0B" font-size="8" font-family="monospace">8,400</text>
+                  </svg>
+                </div>
+
+                <!-- Floating Interactive Action Badge -->
+                <div class="relative z-10 flex items-center justify-between">
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 backdrop-blur-md text-xs">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span id="canvas-status" class="text-cyan-300 font-mono">Đang quét trục toạ độ & giao điểm X/Y...</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button onclick="triggerAutoDemo()" class="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs flex items-center gap-1.5 shadow-md shadow-indigo-500/20">
+                      <i data-lucide="play" class="w-3 h-3"></i> Run AI Pass
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Floating Metric Glass Cards on Canvas -->
+                <div class="relative z-10 grid grid-cols-2 gap-3 mt-auto pt-16">
+                  <div class="p-3 rounded-xl bg-slate-900/80 border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                      <span>Tự động khử trùng lặp</span>
+                      <i data-lucide="shield" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    </div>
+                    <div class="text-base font-bold text-white font-mono">0 Trùng Lặp <span class="text-xs text-emerald-400 font-normal">(100% Sạch)</span></div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-slate-900/80 border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                      <span>Dung lượng Family SKP</span>
+                      <i data-lucide="cpu" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    </div>
+                    <div class="text-base font-bold text-white font-mono">-78.5% <span class="text-xs text-indigo-300 font-normal">(Tối ưu mesh)</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Realtime Console Logs -->
+              <div class="lg:col-span-3 border-t lg:border-t-0 lg:border-l border-white/10 p-4 bg-[#080B13] font-mono text-[11px] flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-slate-400 pb-2 mb-2 border-b border-white/5">
+                    <span class="font-bold text-slate-300 text-[10px] tracking-wider uppercase">XH AI ENGINE LOGS</span>
+                    <button onclick="clearConsoleLogs()" class="hover:text-white text-[10px]">Clear</button>
+                  </div>
+                  <div id="console-logs" class="space-y-1.5 text-slate-400 max-h-56 overflow-y-auto pr-1">
+                    <p class="text-slate-500">> Khởi tạo XH Tools Suite v2.9...</p>
+                    <p class="text-cyan-400">> Đã liên kết Autodesk Revit DB</p>
+                    <p class="text-slate-300">> Quét 24 trục (12 trục X, 12 trục Y)</p>
+                    <p class="text-emerald-400">> Phát hiện 48 giao điểm khả dụng</p>
+                    <p class="text-slate-400">> Áp dụng TCVN 5574: Tiết diện 400x400</p>
+                    <p class="text-indigo-300">> Cột 3D & Dầm sinh tự động: 1.4s</p>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-500">
+                  <span>Thread: UI & Model Safe</span>
+                  <span class="text-cyan-400">FPS: 60.0</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Window Bottom Status Bar -->
+            <div class="px-4 py-2 bg-[#08090E] border-t border-white/10 flex flex-wrap items-center justify-between text-[11px] text-slate-400">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5 text-cyan-400"></i>
+                  Lệnh sẵn sàng: <code class="text-slate-200 bg-white/5 px-1 py-0.5 rounded">XH_WALL</code>, <code class="text-slate-200 bg-white/5 px-1 py-0.5 rounded">XH_COLUMN</code>, <code class="text-slate-200 bg-white/5 px-1 py-0.5 rounded">XH_SKP</code>
+                </span>
+              </div>
+              <div class="flex items-center gap-4 font-mono">
+                <span>Memory: 142 MB</span>
+                <span class="text-emerald-400">Revit Addin API 100% OK</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 3. BENTO GRID - TÍNH NĂNG CỐT LÕI (Linear Style)         -->
+    <!-- ======================================================== -->
+    <section id="features" class="py-24 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 block">KIẾN TRÚC & KẾT CẤU CHÍNH XÁC</span>
+          <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-white">
+            Bộ Công Cụ Được Thiết Kế Cho <br class="hidden sm:inline">
+            <span class="text-gradient-cyan">Hiệu Năng & Độ Chuẩn Xác Tuyệt Đối</span>
+          </h2>
+          <p class="mt-4 text-slate-400 text-base sm:text-lg">
+            Giải quyết triệt để các tác vụ lặp đi lặp lại khiến KTS & Kỹ sư tiêu tốn hàng trăm giờ làm việc mỗi tháng.
+          </p>
+        </div>
+
+        <!-- Bento Grid Layout (3 Columns Asymmetric) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Card 1: AI Modeling CAD-to-BIM (2 Columns Wide Hero Card) -->
+          <div class="lg:col-span-2 glass-card rounded-2xl p-8 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-indigo-500/20 transition-all duration-500"></div>
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center text-cyan-400">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono">
+                AI Modeling 3D
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
+              Dựng Cột, Dầm, Tường 3D Từ CAD & Trục Tọa Độ Tức Thì
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-6">
+              Chỉ với 1 click: Tự động phân tích giao điểm trục, nhận diện layer CAD nhập vào để sinh hàng trăm cột, dầm, tường chính xác từng milimet. Tích hợp thuật toán <strong class="text-slate-200">AI Deduplication</strong> tự động loại bỏ cấu kiện trùng lặp và tính toán góc xoay lệch tâm hoàn hảo.
+            </p>
+
+            <!-- Visual Feature Preview Component -->
+            <div class="rounded-xl bg-[#080B14] border border-white/10 p-4 font-mono text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                  <div class="text-slate-500 text-[10px]">BƯỚC 1</div>
+                  <div class="text-slate-200 font-bold mt-1">Chọn Trục / CAD</div>
+                  <div class="text-slate-400 text-[11px] mt-0.5">Nhận diện layer tường</div>
+                </div>
+                <div class="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                  <div class="text-indigo-400 text-[10px]">BƯỚC 2 (AI ENGINE)</div>
+                  <div class="text-white font-bold mt-1">Khử Trùng & Lệch Tâm</div>
+                  <div class="text-cyan-400 text-[11px] mt-0.5">0% Sai sót toạ độ</div>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                  <div class="text-slate-500 text-[10px]">BƯỚC 3</div>
+                  <div class="text-emerald-400 font-bold mt-1">Sinh Mô Hình 3D</div>
+                  <div class="text-slate-400 text-[11px] mt-0.5">Hoàn tất trong 1.5 giây</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: 3D Converter & SKP Mesh Optimizer -->
+          <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-white/10 flex items-center justify-center text-cyan-400">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-mono">
+                Optimizer
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
+              Chuyển Đổi SketchUp sang Family Revit Siêu Nhẹ
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Tạm biệt nỗi ám ảnh file Revit nặng nề vì file .SKP! Thuật toán tự động nén lưới mesh polygon, ẩn cạnh thừa 3D, bảo toàn 100% màu sắc và map vật liệu, hỗ trợ FBX, 3DS, OBJ và CAD 3D.
+            </p>
+
+            <div class="p-3 rounded-xl bg-[#080B14] border border-white/10 flex items-center justify-between text-xs font-mono">
+              <span class="text-slate-400">Dung lượng giảm:</span>
+              <span class="text-emerald-400 font-bold">Từ 45MB ➜ 4.2MB</span>
+            </div>
+          </div>
+
+          <!-- Card 3: AI Parking Layout (Binh Bãi Đỗ Xe Tự Động) -->
+          <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-white/10 flex items-center justify-center text-amber-400">
+                <i data-lucide="car" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+                Smart Algorithm
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">
+              Binh Bãi Xe AI (Parking Generator)
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Tự động phân tích ranh giới bãi đỗ (Perimeter Ring & Center Island), tự động xoay góc tối ưu để lấy số chỗ đỗ ô tô và xe máy nhiều nhất, đảm bảo khổ đường lưu thông đúng tiêu chuẩn.
+            </p>
+
+            <div class="p-3 rounded-xl bg-[#080B14] border border-white/10 text-xs font-mono space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>Ô tô tiêu chuẩn:</span>
+                <span class="text-amber-400 font-bold">2.5m x 5.0m</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Đường gom 2 chiều:</span>
+                <span class="text-cyan-400 font-bold">6.0m chuẩn PCCC</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Smart Auto Annotations (Dim & Tag chuẩn TCVN) -->
+          <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center text-emerald-400">
+                <i data-lucide="ruler" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">
+                TCVN 100%
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">
+              Auto Dim & Anti-Collision Tags
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Dim tự động 3 cấp (Tổng thể - Tim trục - Ô cửa). Thuật toán AI né đè nét: tự động tính toán khoảng cách an toàn, tự xoay leader song song cấu kiện và căn tâm Room Tag toàn bộ tầng.
+            </p>
+
+            <div class="p-3 rounded-xl bg-[#080B14] border border-white/10 text-xs font-mono space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>Tránh đè nét chữ:</span>
+                <span class="text-emerald-400 font-bold">Tự động 100%</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Đo chuỗi nối tiếp:</span>
+                <span class="text-cyan-400 font-bold">1 Click hoàn tất</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Family Cloud & Sheet Synchronizer -->
+          <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center text-purple-400">
+                <i data-lucide="folder-sync" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 font-mono">
+                Sheet & Excel
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
+              Đồng Bộ Sheet & Trực Quan Hóa Family
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Căn chỉnh Viewport trên hàng trăm Sheet khớp vị trí mẫu 100%. Copy Family trực tiếp giữa các dự án mà không cần mở file nguồn, đồng bộ dữ liệu Schedule 2 chiều với Microsoft Excel.
+            </p>
+
+            <div class="p-3 rounded-xl bg-[#080B14] border border-white/10 text-xs font-mono space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>Căn gióng Viewport:</span>
+                <span class="text-purple-400 font-bold">100 Sheet / 2 Giây</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Purge Family rác:</span>
+                <span class="text-cyan-400 font-bold">Làm nhẹ file tức thì</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 4. WORKFLOW - QUY TRÌNH 1-CLICK TỰ ĐỘNG                 -->
+    <!-- ======================================================== -->
+    <section id="workflow" class="py-24 bg-gradient-to-b from-transparent via-white/[0.015] to-transparent border-y border-white/5 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 block">ĐƠN GIẢN HÓA CÔNG VIỆC PHỨC TẠP</span>
+          <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-white">
+            Quy Trình Hoàn Thiện Bản Vẽ Trong 3 Bước
+          </h2>
+          <p class="mt-4 text-slate-400 text-base sm:text-lg">
+            Không cần viết mã phức tạp, không cần Dynamo rắc rối. XH Tools vận hành với triết lý 1-Click trực quan.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          <!-- Step 1 -->
+          <div class="glass-card rounded-2xl p-8 relative">
+            <div class="text-5xl font-black font-mono text-white/10 mb-4">01</div>
+            <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4">
+              <i data-lucide="mouse-pointer-click" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Chọn Đối Tượng / CAD</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Quét chọn phạm vi trục, chọn file CAD nhập vào hoặc danh sách Sheet bản vẽ cần xử lý trực tiếp trên giao diện Revit.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="glass-card rounded-2xl p-8 relative border-cyan-500/30 shadow-lg shadow-cyan-500/5">
+            <div class="text-5xl font-black font-mono text-cyan-400/20 mb-4">02</div>
+            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">AI Phân Tích & Tối Ưu</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Hệ thống tự động nhận diện cao trình, phân tích lưới, áp dụng tiêu chuẩn thiết kế và tự loại bỏ các xung đột trùng lặp.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="glass-card rounded-2xl p-8 relative">
+            <div class="text-5xl font-black font-mono text-white/10 mb-4">03</div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
+              <i data-lucide="check-check" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Nhận Mô Hình Hoàn Hảo</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Mô hình 3D, hệ thống Dim/Tag và hồ sơ bản vẽ kỹ thuật được hoàn thiện chuẩn chỉnh, sạch nét và sẵn sàng xuất bản.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 5. BẢNG SO SÁNH HIỆU QUẢ THỰC TẾ                         -->
+    <!-- ======================================================== -->
+    <section class="py-20 relative">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 block">SO SÁNH THỰC TẾ</span>
+          <h2 class="text-3xl font-bold text-white">Thao Tác Thủ Công vs. Sức Mạnh XH Tools</h2>
+        </div>
+
+        <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+          <div class="grid grid-cols-12 bg-white/[0.02] p-4 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-white/10">
+            <div class="col-span-5 sm:col-span-4">Tác vụ triển khai BIM</div>
+            <div class="col-span-3 sm:col-span-4 text-rose-400">Cách làm thủ công thông thường</div>
+            <div class="col-span-4 sm:col-span-4 text-cyan-400 font-bold">Giải pháp XH Tools v2.9 AI</div>
+          </div>
+
+          <div class="divide-y divide-white/5 text-sm">
+            <div class="grid grid-cols-12 p-4 items-center">
+              <div class="col-span-5 sm:col-span-4 font-semibold text-white">Dựng cột 3D cho dự án 30 tầng</div>
+              <div class="col-span-3 sm:col-span-4 text-slate-400">4 - 6 giờ đặt từng cột</div>
+              <div class="col-span-4 sm:col-span-4 text-emerald-400 font-semibold flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span>2 giây (1 Click tự động)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-12 p-4 items-center bg-white/[0.01]">
+              <div class="col-span-5 sm:col-span-4 font-semibold text-white">Convert mô hình SKP sang Family</div>
+              <div class="col-span-3 sm:col-span-4 text-slate-400">Nặng hàng chục MB, lỗi mesh vỡ hình</div>
+              <div class="col-span-4 sm:col-span-4 text-emerald-400 font-semibold flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span>Giảm 80% dung lượng, sạch lưới</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-12 p-4 items-center">
+              <div class="col-span-5 sm:col-span-4 font-semibold text-white">Căn chỉnh Viewport trên 80 Sheet</div>
+              <div class="col-span-3 sm:col-span-4 text-slate-400">Kéo thả thủ công, dễ lệch trang</div>
+              <div class="col-span-4 sm:col-span-4 text-emerald-400 font-semibold flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span>Trùng khít 100% tọa độ mẫu</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-12 p-4 items-center bg-white/[0.01]">
+              <div class="col-span-5 sm:col-span-4 font-semibold text-white">Binh phương án đỗ xe hầm & cảnh quan</div>
+              <div class="col-span-3 sm:col-span-4 text-slate-400">Vẽ tay CAD, đếm từng ô xe</div>
+              <div class="col-span-4 sm:col-span-4 text-emerald-400 font-semibold flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span>AI tính toán góc tối đa vị trí</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-12 p-4 items-center">
+              <div class="col-span-5 sm:col-span-4 font-semibold text-white">Đo chuỗi kích thước & gắn Tag</div>
+              <div class="col-span-3 sm:col-span-4 text-slate-400">Dễ trùng nét, chữ đè nét vẽ</div>
+              <div class="col-span-4 sm:col-span-4 text-emerald-400 font-semibold flex items-center gap-1.5">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span>AI Anti-Collision né đè thông minh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 6. PRICING SECTION - BẢNG GIÁ (Linear High-End Dark)      -->
+    <!-- ======================================================== -->
+    <section id="pricing" class="py-24 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 block">CHI PHÍ ĐẦU TƯ TỐI ƯU</span>
+          <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-white">
+            Bảng Giá Minh Bạch, Linh Hoạt Cho Mọi Nhu Cầu
+          </h2>
+          <p class="mt-4 text-slate-400 text-base sm:text-lg">
+            Bắt đầu hoàn toàn miễn phí hoặc nâng cấp lên gói Pro để mở khóa sức mạnh tự động hóa tối đa.
+          </p>
+
+          <!-- Annual/Monthly Toggle -->
+          <div class="mt-8 inline-flex items-center gap-3 p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+            <button id="billing-yearly" onclick="setBilling('yearly')" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow transition-all">
+              Gói Theo Năm (Tiết Kiệm 25%)
+            </button>
+            <button id="billing-lifetime" onclick="setBilling('lifetime')" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">
+              Bản Quyền Trọn Đời
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Pricing Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
+
+          <!-- Plan 1: Free Starter -->
+          <div class="glass-card rounded-2xl p-8 flex flex-col justify-between relative">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white">Bản Khởi Đầu (Free)</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">Trải Nghiệm</span>
+              </div>
+              <p class="text-slate-400 text-xs mb-6">Dành cho sinh viên kiến trúc & KTS trải nghiệm các tiện ích cơ bản.</p>
+              
+              <div class="flex items-baseline gap-1 mb-8">
+                <span class="text-4xl font-extrabold text-white">0đ</span>
+                <span class="text-xs text-slate-400">/ miễn phí vĩnh viễn</span>
+              </div>
+
+              <div class="space-y-3.5 text-xs text-slate-300 border-t border-white/10 pt-6">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Dim Grid & Level 1-Click cơ bản</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Purge Family rác (0 instance)</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Nạp Pattern AutoCAD (.pat) vào Revit</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Auto Join cấu kiện cơ bản</span>
+                </div>
+                <div class="flex items-center gap-2.5 text-slate-500">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                  <span>AI Modeling Cột / Dầm / Tường từ CAD</span>
+                </div>
+                <div class="flex items-center gap-2.5 text-slate-500">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                  <span>Binh bãi đỗ xe thông minh AI</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/5">
+              <a href="#download" class="w-full block text-center py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-colors">
+                Tải Bản Free Ngay
+              </a>
+            </div>
+          </div>
+
+          <!-- Plan 2: Pro Suite (Featured / Most Popular) -->
+          <div class="relative rounded-2xl bg-gradient-to-b from-[#131728] to-[#0A0D17] border-2 border-indigo-500/60 p-8 flex flex-col justify-between shadow-2xl shadow-indigo-500/20 transform lg:-translate-y-2">
+            <!-- Glow Ribbon Tag -->
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold text-[11px] tracking-wide uppercase shadow-lg shadow-indigo-500/40">
+              Khuyên Dùng Nhiều Nhất ★
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-white">Chuyên Nghiệp (PRO)</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-indigo-500/20 text-cyan-300 border border-indigo-500/30">Đầy Đủ AI</span>
+              </div>
+              <p class="text-slate-400 text-xs mb-6">Dành cho KTS, BIM Modeler & Trưởng nhóm thiết kế chuyên nghiệp.</p>
+              
+              <div class="flex items-baseline gap-1 mb-8">
+                <span id="price-pro" class="text-4xl font-extrabold text-white">499.000đ</span>
+                <span id="period-pro" class="text-xs text-slate-400">/ năm / máy</span>
+              </div>
+
+              <div class="space-y-3.5 text-xs text-slate-200 border-t border-white/10 pt-6">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span class="font-semibold text-white">Mở khóa toàn bộ tính năng AI Modeling</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Dựng Cột, Dầm, Tường 3D từ CAD & Trục</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Convert SketchUp, 3DS, FBX sang Family siêu nhẹ</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Binh bãi xe thông minh AI (Ô tô & Xe máy)</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Auto Tag né đè & Dim tự động 3 cấp</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Đồng bộ Viewport trên hàng trăm Sheet trùng khít</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Xuất CAD 1 file/Sheet & đồng bộ 2 chiều Excel</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                  <span>Hỗ trợ cập nhật các bản vá mới nhất v2.9.x</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/10">
+              <a href="https://zalo.me/0987654321" target="_blank" class="w-full block text-center py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:opacity-95 text-white font-bold text-sm shadow-xl shadow-indigo-500/30 transition-all">
+                Đăng Ký Gói Pro Ngay
+              </a>
+            </div>
+          </div>
+
+          <!-- Plan 3: Lifetime Studio -->
+          <div class="glass-card rounded-2xl p-8 flex flex-col justify-between relative">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white">Vĩnh Viễn (Studio)</h3>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-white/5 text-purple-300 border border-purple-500/20">Trọn Đời</span>
+              </div>
+              <p class="text-slate-400 text-xs mb-6">Dành cho Studio, Doanh nghiệp tư vấn thiết kế & BIM Manager.</p>
+              
+              <div class="flex items-baseline gap-1 mb-8">
+                <span class="text-4xl font-extrabold text-white">1.290.000đ</span>
+                <span class="text-xs text-slate-400">/ vĩnh viễn / máy</span>
+              </div>
+
+              <div class="space-y-3.5 text-xs text-slate-300 border-t border-white/10 pt-6">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span class="font-semibold text-white">Tất cả quyền lợi của gói PRO</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Bản quyền sử dụng vĩnh viễn không giới hạn hạn dùng</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Tương thích đa phiên bản Revit (2020 - 2027+)</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Miễn phí cập nhật tất cả tính năng AI trong tương lai</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Kênh hỗ trợ kỹ thuật ưu tiên 1-1 qua UltraViewer/Zalo</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Hỗ trợ xuất hóa đơn VAT theo yêu cầu công ty</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/5">
+              <a href="https://zalo.me/0987654321" target="_blank" class="w-full block text-center py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-colors">
+                Liên Hệ Cài Đặt Doanh Nghiệp
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 7. HƯỚNG DẪN XUẤT BẢN WEBSITE MIỄN PHÍ (Deploy Guide)     -->
+    <!-- ======================================================== -->
+    <section id="deploy-guide" class="py-20 bg-[#0B0E17]/60 border-y border-white/5 relative">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1 block">XUẤT BẢN MIỄN PHÍ 100%</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Cách Đưa Website Này Lên Mạng Miễn Phí Trong 2 Phút</h2>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-mono">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>0đ Phí Duy Trì • Băng Thông Vô Hạn</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Method 1: Vercel -->
+          <div class="glass-card rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white font-bold">▲</div>
+              <h3 class="text-base font-bold text-white">Vercel (Khuyên Dùng)</h3>
+            </div>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              1. Truy cập <code class="text-cyan-300">vercel.com</code> (đăng nhập bằng GitHub/Google).<br>
+              2. Kéo thả thư mục chứa file <code class="text-cyan-300">index.html</code> này vào Vercel.<br>
+              3. Nhận ngay link trực tuyến miễn phí dạng <code class="text-emerald-300">xhtools.vercel.app</code>!
+            </p>
+            <span class="text-[11px] text-cyan-400 font-semibold">Tự động cấp SSL HTTPS miễn phí</span>
+          </div>
+
+          <!-- Method 2: GitHub Pages -->
+          <div class="glass-card rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-base font-bold text-white">GitHub Pages</h3>
+            </div>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              1. Tạo một repository mới trên GitHub (VD: <code class="text-cyan-300">xh-tools-web</code>).<br>
+              2. Upload file <code class="text-cyan-300">index.html</code> và file logo lên repo.<br>
+              3. Vào Settings ➜ Pages ➜ Chọn Branch <code class="text-cyan-300">main</code> và nhấn Save.
+            </p>
+            <span class="text-[11px] text-cyan-400 font-semibold">Địa chỉ: username.github.io/repo</span>
+          </div>
+
+          <!-- Method 3: Netlify Drop -->
+          <div class="glass-card rounded-xl p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">♦</div>
+              <h3 class="text-base font-bold text-white">Netlify Drop</h3>
+            </div>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              1. Truy cập <code class="text-cyan-300">app.netlify.com/drop</code>.<br>
+              2. Kéo toàn bộ thư mục chứa file vào ô tải lên.<br>
+              3. Website sẽ hoạt động ngay lập tức sau 10 giây mà không cần tài khoản!
+            </p>
+            <span class="text-[11px] text-cyan-400 font-semibold">Hỗ trợ gắn tên miền riêng .vn miễn phí</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 8. DOWNLOAD & CTA SECTION                                -->
+    <!-- ======================================================== -->
+    <section id="download" class="py-24 relative overflow-hidden">
+      <!-- Glow ambient -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="w-[600px] h-[300px] bg-gradient-to-r from-indigo-500/20 via-cyan-500/20 to-indigo-500/20 blur-3xl rounded-full"></div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-6">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>Cài Đặt Nhanh Trong 30 Giây</span>
+        </div>
+
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Sẵn Sàng Nâng Cấp Năng Suất <br>
+          <span class="text-gradient-cyan">BIM & Revit Của Bạn Ngay Hôm Nay?</span>
+        </h2>
+        
+        <p class="mt-6 text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
+          Tương thích hoàn hảo từ Autodesk Revit 2020 đến Revit 2027. Bộ cài đặt tự động nhận diện các phiên bản Revit hiện có trên máy tính của bạn.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button onclick="downloadSoftware()" class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-bold text-base shadow-xl shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span>Tải Bộ Cài Đặt Setup_XH_Tools.exe</span>
+          </button>
+          
+          <a href="https://zalo.me/0987654321" target="_blank" class="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 font-semibold text-base backdrop-blur-md transition-colors">
+            <i data-lucide="message-circle" class="w-5 h-5 text-cyan-400"></i>
+            <span>Zalo Kỹ Thuật Hỗ Trợ 1-1</span>
+          </a>
+        </div>
+
+        <div class="mt-8 flex items-center justify-center gap-6 text-xs text-slate-500 font-mono">
+          <span>Phiên bản: 2.9.4 Stable</span>
+          <span>•</span>
+          <span>Dung lượng: ~24 MB</span>
+          <span>•</span>
+          <span>SHA-256 Verified Clean</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- 9. FOOTER                                                -->
+  <!-- ======================================================== -->
+  <footer class="border-t border-white/10 bg-[#06080D] py-14 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        
+        <!-- Col 1: Brand & Author -->
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-indigo-500/20 border border-white/10 p-1 flex items-center justify-center">
+              <svg class="w-full h-full text-cyan-400" viewBox="0 0 100 100" fill="none">
+                <rect x="10" y="22" width="28" height="9" rx="4.5" fill="#38BDF8"/>
+                <rect x="24" y="38" width="42" height="9" rx="4.5" fill="#22D3EE"/>
+                <rect x="15" y="54" width="56" height="9" rx="4.5" fill="#06B6D4"/>
+                <rect x="30" y="70" width="38" height="9" rx="4.5" fill="#6366F1"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-lg font-bold text-white tracking-tight">XH TOOLS & APP</span>
+              <span class="block text-[10px] text-slate-500 tracking-wider font-mono">REVIT AUTOMATION & AI SUITE</span>
+            </div>
+          </div>
+          
+          <p class="text-xs text-slate-400 leading-relaxed max-w-md">
+            Sản phẩm được nghiên cứu và phát triển bởi <strong class="text-slate-200">Kỹ sư Cái Xuân Hiếu (CAI XUAN HIEU)</strong> nhằm tối ưu hóa quy trình mô hình hóa thông tin công trình BIM, nâng tầm năng suất cho Kiến trúc sư và Kỹ sư xây dựng tại Việt Nam.
+          </p>
+
+          <div class="pt-2 text-xs text-slate-400 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+            <span>Hệ thống hỗ trợ trực tiếp qua Zalo / UltraViewer</span>
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">Sản Phẩm & Tính Năng</h4>
+          <ul class="space-y-2 text-xs text-slate-400">
+            <li><a href="#features" class="hover:text-cyan-400 transition-colors">Dựng Cột & Dầm Tự Động</a></li>
+            <li><a href="#features" class="hover:text-cyan-400 transition-colors">Convert SketchUp sang Family</a></li>
+            <li><a href="#features" class="hover:text-cyan-400 transition-colors">Binh Bãi Đỗ Xe Thông Minh AI</a></li>
+            <li><a href="#features" class="hover:text-cyan-400 transition-colors">Auto Tag & Dim Chuẩn TCVN</a></li>
+            <li><a href="#features" class="hover:text-cyan-400 transition-colors">Đồng Bộ Sheet & Viewport</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Community & Support -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">Hỗ Trợ & Bản Quyền</h4>
+          <ul class="space-y-2 text-xs text-slate-400">
+            <li><a href="#pricing" class="hover:text-cyan-400 transition-colors">Bảng Giá Bản Quyền</a></li>
+            <li><a href="#deploy-guide" class="hover:text-cyan-400 transition-colors">Hướng Dẫn Triển Khai Web</a></li>
+            <li><a href="https://zalo.me/0987654321" target="_blank" class="hover:text-cyan-400 transition-colors">Cộng Đồng Zalo XH Tools</a></li>
+            <li><a href="#" class="hover:text-cyan-400 transition-colors">Mã QR Ủng Hộ & Donate</a></li>
+            <li><a href="#" class="hover:text-cyan-400 transition-colors">Chính Sách Bảo Hành & Cập Nhật</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Copyright Bar -->
+      <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>© 2026 XH Tools & App. Bản quyền thuộc về Kỹ sư Cái Xuân Hiếu. Tất cả các quyền được bảo lưu.</p>
+        <p class="font-mono text-[11px] text-slate-600">Autodesk và Revit là thương hiệu đã đăng ký của Autodesk, Inc.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================== -->
+  <!-- MODAL VIDEO DEMO                                         -->
+  <!-- ======================================================== -->
+  <div id="demo-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div class="relative w-full max-w-3xl rounded-2xl bg-[#0F1320] border border-white/20 p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <i data-lucide="play-circle" class="w-5 h-5 text-cyan-400"></i>
+          <h3 class="text-lg font-bold text-white">Video Thao Tác XH Tools v2.9</h3>
+        </div>
+        <button onclick="closeDemoVideo()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="my-6 aspect-video rounded-xl bg-black border border-white/10 flex flex-col items-center justify-center text-center p-6">
+        <div class="w-16 h-16 rounded-full bg-indigo-600/30 border border-indigo-400/50 flex items-center justify-center text-cyan-400 mb-4 animate-pulse">
+          <i data-lucide="video" class="w-8 h-8"></i>
+        </div>
+        <h4 class="text-lg font-bold text-white mb-2">Xem Trực Tiếp Quy Trình 1-Click</h4>
+        <p class="text-xs text-slate-400 max-w-md mb-4">
+          Video hướng dẫn chi tiết dựng cột dầm từ CAD, làm sạch family SketchUp và binh bãi xe thông minh trong Autodesk Revit.
+        </p>
+        <a href="https://youtube.com" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25">
+          Mở Kênh Video Hướng Dẫn YouTube
+        </a>
+      </div>
+
+      <div class="flex justify-end">
+        <button onclick="closeDemoVideo()" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300">
+          Đóng cửa sổ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC & INTERACTIONS                          -->
+  <!-- ======================================================== -->
+  <script>
+    // Initialize Lucide Icons
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+    });
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      // Close mobile menu when clicking nav links
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+
+    // Pricing Billing Period Toggle
+    function setBilling(type) {
+      const yearlyBtn = document.getElementById('billing-yearly');
+      const lifetimeBtn = document.getElementById('billing-lifetime');
+      const pricePro = document.getElementById('price-pro');
+      const periodPro = document.getElementById('period-pro');
+
+      if (type === 'yearly') {
+        yearlyBtn.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow transition-all';
+        lifetimeBtn.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all';
+        pricePro.textContent = '499.000đ';
+        periodPro.textContent = '/ năm / máy';
+      } else {
+        lifetimeBtn.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow transition-all';
+        yearlyBtn.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all';
+        pricePro.textContent = '990.000đ';
+        periodPro.textContent = '/ vĩnh viễn (Ưu đãi đợt 1)';
+      }
+    }
+
+    // Interactive Ribbon Actions Simulator on Mockup
+    function simulateAction(type) {
+      const statusEl = document.getElementById('canvas-status');
+      const consoleEl = document.getElementById('console-logs');
+
+      let actionText = '';
+      let logMsg = '';
+
+      switch (type) {
+        case 'wall':
+          actionText = 'Đang nhận diện layer tường CAD & tự động sinh Wall 3D...';
+          logMsg = '> Lệnh XH_WALL: Phân tích 142 đường trục CAD ➜ Sinh tường 200mm hoàn tất!';
+          break;
+        case 'column':
+          actionText = 'AI đang quét giao điểm trục X & Y để dựng Cột 3D...';
+          logMsg = '> Lệnh XH_COLUMN: Đã đặt 48 Cột bê tông 400x400 (AI Deduplication: OK)';
+          break;
+        case 'skp':
+          actionText = 'Đang tối ưu hoá lưới Polygon mô hình SketchUp...';
+          logMsg = '> Lệnh XH_SKP: Nén thành công Family RFA, giảm 82% dung lượng mesh!';
+          break;
+        case 'dim':
+          actionText = 'Đang đo chuỗi kích thước 3 cấp & căn gióng TCVN...';
+          logMsg = '> Lệnh XH_DIM: Đã sinh 186 chuỗi Dimension tự động chuẩn xác!';
+          break;
+        case 'parking':
+          actionText = 'AI đang tính toán góc xoay tối đa ô đỗ ô tô & xe máy...';
+          logMsg = '> Lệnh XH_PARKING: Đề xuất 84 ô tô + 160 xe máy, tối ưu 100% diện tích!';
+          break;
+      }
+
+      if (statusEl) statusEl.textContent = actionText;
+
+      if (consoleEl) {
+        const p = document.createElement('p');
+        p.className = 'text-cyan-300 font-semibold';
+        p.textContent = logMsg;
+        consoleEl.prepend(p);
+      }
+    }
+
+    // Trigger Demo Run
+    function triggerAutoDemo() {
+      simulateAction('column');
+      setTimeout(() => simulateAction('wall'), 900);
+      setTimeout(() => simulateAction('dim'), 1800);
+    }
+
+    // Clear Logs
+    function clearConsoleLogs() {
+      const consoleEl = document.getElementById('console-logs');
+      if (consoleEl) {
+        consoleEl.innerHTML = '<p class="text-slate-500">> Console logs đã được dọn sạch.</p>';
+      }
+    }
+
+    // Modal Control
+    function openDemoVideo() {
+      const modal = document.getElementById('demo-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeDemoVideo() {
+      const modal = document.getElementById('demo-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // Download software handler
+    function downloadSoftware() {
+      alert("Cảm ơn bạn đã lựa chọn XH Tools & App!\n\nBộ cài đặt XH Tools Suite v2.9 sẽ tự động kích hoạt.\nNếu bạn cần hỗ trợ cài đặt hoặc kích hoạt bản Pro, vui lòng liên hệ Zalo Kỹ sư Xuân Hiếu!");
+      // If setup file exists in folder or URL, window.location.href = 'Setup_XH_Tools_v2.9.exe';
+    }
+  </script>
+</body>
+</html>
