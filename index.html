@@ -198,11 +198,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-[72px] gap-4">
         <!-- Brand Logo -->
-        <a href="#top" class="flex items-center gap-3 shrink-0 group focus:outline-none">
+        <a href="#top" class="flex items-center gap-2 shrink-0 group focus:outline-none">
           <img
             src="logo-transparent.png"
             alt="XH Tools Logo"
-            class="h-9 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(6,182,212,0.4)] transition-transform duration-300 group-hover:scale-[1.03]"
+            class="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(6,182,212,0.4)] transition-transform duration-300 group-hover:scale-[1.03]"
           />
         </a>
 
@@ -215,7 +215,7 @@
         </nav>
 
         <!-- Actions -->
-        <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="https://zalo.me/0971042842"
             target="_blank"
@@ -228,17 +228,18 @@
           <button
             type="button"
             onclick="openOrderModal('Dùng Thử 7 Ngày Miễn Phí (0đ)')"
-            class="btn-primary inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-sm font-semibold text-white rounded-xl shadow-lg shadow-indigo-500/25"
+            class="btn-primary inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl shadow-lg shadow-indigo-500/25 whitespace-nowrap"
           >
-            <span>Dùng thử 7 ngày</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <span class="sm:hidden">Dùng thử</span>
+            <span class="hidden sm:inline">Dùng thử 7 ngày</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
           </button>
 
           <!-- Mobile Menu Toggle -->
           <button
             id="mobileMenuBtn"
             type="button"
-            class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.08]"
+            class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.08] shrink-0"
             aria-label="Mở menu"
             aria-expanded="false"
           >
@@ -288,16 +289,16 @@
             <button
               type="button"
               onclick="openOrderModal('Dùng Thử 7 Ngày Miễn Phí (0đ)')"
-              class="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-white"
+              class="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-xl text-sm sm:text-base font-semibold text-white whitespace-nowrap"
             >
-              <i data-lucide="zap" class="w-5 h-5"></i>
-              <span>Dùng thử Full tính năng 7 ngày — 0đ</span>
+              <i data-lucide="zap" class="w-4 h-4 sm:w-5 sm:h-5 shrink-0"></i>
+              <span>Dùng thử 7 ngày miễn phí (0đ)</span>
             </button>
             <a
               href="#danh-muc-45"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-slate-100 border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] hover:border-indigo-400/50 transition-all"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-xl text-sm sm:text-base font-semibold text-slate-100 border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] hover:border-indigo-400/50 transition-all whitespace-nowrap"
             >
-              <i data-lucide="layout-grid" class="w-5 h-5 text-cyan-400"></i>
+              <i data-lucide="layout-grid" class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 shrink-0"></i>
               <span>Xem đầy đủ 45 công cụ</span>
             </a>
           </div>
@@ -611,13 +612,13 @@
           </div>
 
           <!-- Search Box -->
-          <div class="w-full lg:w-80 shrink-0">
+          <div class="w-full lg:w-96 shrink-0">
             <div class="relative">
               <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
               <input
                 id="toolSearchInput"
                 type="text"
-                placeholder="Tìm nhanh công cụ (VD: CAD, Dim, Excel...)"
+                placeholder="Tìm công cụ (VD: CAD, Dim, Excel...)"
                 class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/15 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400/70 focus:bg-white/[0.06] transition-colors"
               />
             </div>
@@ -726,8 +727,8 @@
             </div>
 
             <div class="pb-5 mb-5 border-b border-white/10">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Miễn phí</span>
+              <div class="flex items-baseline gap-1.5 whitespace-nowrap">
+                <span class="text-3xl font-extrabold text-white tracking-tight">Miễn phí</span>
               </div>
               <p class="text-xs text-slate-400 mt-1.5">0đ • 7 ngày dùng thử đầy đủ</p>
             </div>
@@ -771,9 +772,9 @@
             </div>
 
             <div class="pb-5 mb-5 border-b border-white/10">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">50.000đ</span>
-                <span class="text-sm text-slate-400">/ tháng</span>
+              <div class="flex items-baseline gap-1.5 whitespace-nowrap">
+                <span class="text-3xl font-extrabold text-white tracking-tight">50.000đ</span>
+                <span class="text-xs sm:text-sm text-slate-400">/ tháng</span>
               </div>
               <p class="text-xs text-slate-400 mt-1.5">Chỉ ~1.600đ / ngày làm việc</p>
             </div>
@@ -817,9 +818,9 @@
             </div>
 
             <div class="pb-5 mb-5 border-b border-white/10">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">250.000đ</span>
-                <span class="text-sm text-slate-400">/ 6 tháng</span>
+              <div class="flex items-baseline gap-1.5 whitespace-nowrap">
+                <span class="text-3xl font-extrabold text-white tracking-tight">250.000đ</span>
+                <span class="text-xs sm:text-sm text-slate-400">/ 6 tháng</span>
               </div>
               <p class="text-xs text-emerald-400 font-medium mt-1.5">Tương đương ~41.600đ / tháng (Tiết kiệm 17%)</p>
             </div>
@@ -869,9 +870,9 @@
             </div>
 
             <div class="pb-5 mb-5 border-b border-white/15">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">599.000đ</span>
-                <span class="text-sm text-indigo-200">/ 1 năm</span>
+              <div class="flex items-baseline gap-1.5 whitespace-nowrap">
+                <span class="text-3xl font-extrabold text-white tracking-tight">599.000đ</span>
+                <span class="text-xs sm:text-sm text-indigo-200">/ 1 năm</span>
               </div>
               <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">
                 <i data-lucide="gift" class="w-3.5 h-3.5 shrink-0"></i>
